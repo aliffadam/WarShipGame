@@ -5,6 +5,31 @@ const { MongoClient, ObjectId } = require('mongodb');
 
 const app = express();
 const port = process.env.PORT || 3000;
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
+
+const options = {
+  definition: {
+      openapi: '3.0.0',
+      info: {
+          title: 'Welcome To Group Battleship Game',
+          version: '1.0.0'
+      },
+      components: {  // Add 'components' section
+          securitySchemes: {  // Define 'securitySchemes'
+              bearerAuth: {  // Define 'bearerAuth'
+                  type: 'http',
+                  scheme: 'bearer',
+                  bearerFormat: 'JWT'
+              }
+          }
+      }
+  },
+  apis: ['./index.js'],
+};
+
+const swaggerSpec = swaggerJsdoc(options);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const uri = "mongodb+srv://ainfaqihah:Ain_020803@cluster0.5nmy5.mongodb.net/battleship_game?retryWrites=true&w=majority&appName=Cluster0";
 const client = new MongoClient(uri);
@@ -24,6 +49,10 @@ async function connectToDB() {
 }
 
 connectToDB();
+
+app.get('/', (req, res) => {
+  res.send('Welcome to the BattleShip Game');
+});
 
 
 // Authentication: Admin Login
