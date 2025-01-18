@@ -6,10 +6,25 @@ const { MongoClient, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 3000;
 
-const uri = "mongodb+srv://ainfaqihah:Ain_020803@cluster0.siq0bhl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-
+const uri = "mongodb+srv://ainfaqihah:Ain_020803@cluster0.5nmy5.mongodb.net/battleship_game?retryWrites=true&w=majority&appName=Cluster0";
+const client = new MongoClient(uri);
 app.use(express.json());
+
+const dbName = "battleship_game"; // Replace with your actual database name
+let db;
+
+async function connectToDB() {
+  try {
+    await client.connect(); // Connect to the MongoDB server
+    db = client.db(dbName); // Select the database
+    console.log(`Connected to database: ${dbName}`);
+  } catch (error) {
+    console.error("Error connecting to the database", error);
+  }
+}
+
+connectToDB();
+
 
 // Authentication: Admin Login
 app.post('/admin/login', async (req, res) => {
